@@ -9,11 +9,11 @@ from espn_api.football import League
 
 load_dotenv()
 
-year = 2025
+YEAR = 2025
 
 league = League(
     league_id=int(os.getenv("LEAGUE_ID")),
-    year=year,
+    year=YEAR,
     espn_s2=os.getenv("ESPN_S2"),
     swid=os.getenv("SWID"),
 )
@@ -61,7 +61,7 @@ def get_power_rankings():
     power_rankings = league.power_rankings(week)
 
     with open(
-        f"../data/raw/weekly_data/power_rankings_week_{week}.json",
+        f"../data/raw/power_rankings/power_rankings_week_{week}.json",
         "w",
         encoding="utf-8",
     ) as f:
@@ -81,7 +81,6 @@ def get_weekly_match_data_by_matchup():
     weekly_match_results["year"] = league_year
 
     for match in weekly_matchups:
-        weekly_match_results["matchup_type"] = match.matchup_type
 
         home_team = match.home_team
         weekly_match_results[home_team]["score"] = match.home_score
@@ -89,6 +88,7 @@ def get_weekly_match_data_by_matchup():
         weekly_match_results[home_team]["opposing_team"] = match.away_team
         weekly_match_results[home_team]["projected"] = match.home_projected
         weekly_match_results[home_team]["lineup"] = match.home_lineup
+        weekly_match_results[home_team]["matchup_type"] = match.matchup_type
 
         away_team = match.away_team
         weekly_match_results[away_team]["score"] = match.away_score
@@ -96,9 +96,10 @@ def get_weekly_match_data_by_matchup():
         weekly_match_results[away_team]["opposing_team"] = match.home_team
         weekly_match_results[away_team]["projected"] = match.away_projected
         weekly_match_results[away_team]["lineup"] = match.away_lineup
+        weekly_match_results[away_team]["matchup_type"] = match.matchup_type
 
     with open(
-        f"../data/raw/weekly_data/weekly_match_results_week_{week}.json",
+        f"../data/raw/weekly_match_data/weekly_match_results_week_{week}.json",
         "w",
         encoding="utf-8",
     ) as f:
@@ -145,7 +146,7 @@ def get_team_info_by_week():
         team_info_by_week[team_name]["team_final_standing"] = team_final_standing
 
     with open(
-        f"../data/raw/weekly_data/team_info_by_week_week_{week}.json",
+        f"../data/raw/weekly_team_info/team_info_by_week_week_{week}.json",
         "w",
         encoding="utf-8",
     ) as f:
